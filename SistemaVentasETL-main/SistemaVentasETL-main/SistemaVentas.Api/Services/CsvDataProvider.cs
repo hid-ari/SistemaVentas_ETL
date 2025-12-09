@@ -202,7 +202,7 @@ namespace SistemaVentas.Api.Services
         public List<FactSales> LoadFactSales()
         {
             var factSales = new List<FactSales>();
-            var filePath = Path.Combine(_dataPath, "VentasExternas.csv");
+            var filePath = Path.Combine(_dataPath, "FactSales.csv");
 
             if (!File.Exists(filePath))
             {
@@ -219,7 +219,7 @@ namespace SistemaVentas.Api.Services
                 {
                     var cols = lines[i].Split(',');
                     
-                    // Formato: invoice_number,product_code,customer_name,store_name,salesperson,quantity,unit_price,total_amount,sale_date
+                    // Formato: invoice_number,product_code,customer_name,store_name,salesperson_name,quantity,unit_price,total_amount,sale_date
                     var invoiceNumber = cols[0].Trim();
                     var productCode = cols[1].Trim();
                     var customerName = cols[2].Trim();
@@ -247,7 +247,7 @@ namespace SistemaVentas.Api.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error en linea {i} de VentasExternas.csv: {ex.Message}");
+                    Console.WriteLine($"Error en linea {i} de FactSales.csv: {ex.Message}");
                 }
             }
 

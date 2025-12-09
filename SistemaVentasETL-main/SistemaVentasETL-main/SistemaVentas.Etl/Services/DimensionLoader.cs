@@ -12,6 +12,8 @@ namespace SistemaVentas.Etl.Services
             _connectionString = connectionString;
         }
 
+        public string GetConnectionString() => _connectionString;
+
         public async Task<int> LoadDateAsync(DateTime date)
         {
             using var conn = new SqlConnection(_connectionString);
@@ -196,7 +198,7 @@ namespace SistemaVentas.Etl.Services
             return Convert.ToInt32(newKey);
         }
 
-        public async Task<int> LoadStoreAsync(string storeName, string country = "República Dominicana", string? region = null, string? city = null)
+        public async Task<int> LoadStoreAsync(string storeName, string country = "República Dominicana", string? region = "Sin Región", string? city = null)
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -226,8 +228,8 @@ namespace SistemaVentas.Etl.Services
             insertCmd.Parameters.AddWithValue("@StoreCode", storeCode);
             insertCmd.Parameters.AddWithValue("@StoreName", storeName);
             insertCmd.Parameters.AddWithValue("@Country", country);
-            insertCmd.Parameters.AddWithValue("@Region", (object?)region ?? DBNull.Value);
-            insertCmd.Parameters.AddWithValue("@City", (object?)city ?? DBNull.Value);
+            insertCmd.Parameters.AddWithValue("@Region", region ?? "Sin Región");
+            insertCmd.Parameters.AddWithValue("@City", city ?? "Sin Ciudad");
 
             var newKey = await insertCmd.ExecuteScalarAsync();
             return Convert.ToInt32(newKey);
@@ -257,8 +259,8 @@ namespace SistemaVentas.Etl.Services
             insertCmd.Parameters.AddWithValue("@StoreCode", storeCode);
             insertCmd.Parameters.AddWithValue("@StoreName", storeName);
             insertCmd.Parameters.AddWithValue("@Country", country);
-            insertCmd.Parameters.AddWithValue("@Region", region);
-            insertCmd.Parameters.AddWithValue("@City", city);
+            insertCmd.Parameters.AddWithValue("@Region", string.IsNullOrWhiteSpace(region) ? "Sin Región" : region);
+            insertCmd.Parameters.AddWithValue("@City", string.IsNullOrWhiteSpace(city) ? "Sin Ciudad" : city);
 
             var newKey = await insertCmd.ExecuteScalarAsync();
             return Convert.ToInt32(newKey);
@@ -377,6 +379,96 @@ namespace SistemaVentas.Etl.Services
             using var cmd = new SqlCommand($"SELECT COUNT(*) FROM {tableName}", conn);
             var result = await cmd.ExecuteScalarAsync();
             return Convert.ToInt32(result);
+        }
+
+        public async Task<int?> GetProductKeyByCodeAsync(string productCode)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var cmd = new SqlCommand(
+                "SELECT product_key FROM Dimension.DimProduct WHERE product_code = @ProductCode", conn);
+            cmd.Parameters.AddWithValue("@ProductCode", productCode);
+
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : null;
+        }
+
+        public async Task<int?> GetCustomerKeyByCodeAsync(string customerCode)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var cmd = new SqlCommand(
+                "SELECT customer_key FROM Dimension.DimCustomer WHERE customer_code = @CustomerCode", conn);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCode);
+
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : null;
+        }
+
+        public async Task<int?> GetStoreKeyByCodeAsync(string storeCode)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var cmd = new SqlCommand(
+                "SELECT store_key FROM Dimension.DimStore WHERE store_code = @StoreCode", conn);
+            cmd.Parameters.AddWithValue("@StoreCode", storeCode);
+
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : null;
+        }
+
+        public async Task<int?> GetSalespersonKeyByCodeAsync(string salespersonCode)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var cmd = new SqlCommand(
+                "SELECT salesperson_key FROM Dimension.DimSalesperson WHERE salesperson_code = @SalespersonCode", conn);
+            cmd.Parameters.AddWithValue("@SalespersonCode", salespersonCode);
+
+            var result = await cmd.ExecuteScalarAsync();
+            return result != null ? Convert.ToInt32(result) : null;
+        }
+
+        /// <summary>
+        /// Limpia todas las tablas del Data Warehouse (Dimensiones y Hechos)
+        /// </summary>
+        public async Task CleanDataWarehouseAsync()
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            try
+            {
+                // Eliminar hechos (por integridad referencial)
+                await ExecuteNonQueryAsync(conn, "TRUNCATE TABLE Fact.FactSales");
+                
+                // Eliminar dimensiones
+                await ExecuteNonQueryAsync(conn, "DELETE FROM Dimension.DimDate");
+                await ExecuteNonQueryAsync(conn, "DELETE FROM Dimension.DimProduct; DBCC CHECKIDENT ('Dimension.DimProduct', RESEED, 0)");
+                await ExecuteNonQueryAsync(conn, "DELETE FROM Dimension.DimCustomer; DBCC CHECKIDENT ('Dimension.DimCustomer', RESEED, 0)");
+                await ExecuteNonQueryAsync(conn, "DELETE FROM Dimension.DimStore; DBCC CHECKIDENT ('Dimension.DimStore', RESEED, 0)");
+                await ExecuteNonQueryAsync(conn, "DELETE FROM Dimension.DimSalesperson; DBCC CHECKIDENT ('Dimension.DimSalesperson', RESEED, 0)");
+                
+                Console.WriteLine("Tablas limpiadas exitosamente");
+                Console.WriteLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR al limpiar tablas: {ex.Message}");
+                Console.WriteLine();
+                throw;
+            }
+        }
+
+        private async Task ExecuteNonQueryAsync(SqlConnection conn, string sql)
+        {
+            using var cmd = new SqlCommand(sql, conn);
+            cmd.CommandTimeout = 60; // 60 segundos timeout
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }

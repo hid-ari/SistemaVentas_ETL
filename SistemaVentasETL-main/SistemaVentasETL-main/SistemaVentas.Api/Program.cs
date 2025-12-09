@@ -12,17 +12,19 @@ var useCsvData = builder.Configuration.GetValue<bool>("UseCsvData", true);
 
 if (useCsvData)
 {
-    Console.WriteLine("  API CONFIGURADA PARA USAR DATOS DESDE CSV");
+    Console.WriteLine("API CONFIGURADA PARA USAR DATOS DESDE CSV");
+    Console.WriteLine();
     
     builder.Services.AddDbContext<SistemaVentasContext>(options =>
         options.UseInMemoryDatabase("SistemaVentasInMemory"));
     
     var dataPath = builder.Configuration.GetValue<string>("CsvDataPath") 
-        ?? Path.Combine(Directory.GetCurrentDirectory(), "..", "SistemaVentas.Etl", "Data");
+        ?? Path.Combine(Directory.GetCurrentDirectory(), "Data");
     
     builder.Services.AddSingleton(new CsvDataProvider(dataPath));
     
     Console.WriteLine($"Ruta de datos CSV: {dataPath}");
+    Console.WriteLine();
 }
 else
 {
@@ -41,7 +43,9 @@ if (useCsvData)
         var context = scope.ServiceProvider.GetRequiredService<SistemaVentasContext>();
         var csvProvider = scope.ServiceProvider.GetRequiredService<CsvDataProvider>();
         
+        Console.WriteLine();
         Console.WriteLine("Cargando datos desde archivos CSV...");
+        Console.WriteLine();
         
         context.DimDates.AddRange(csvProvider.LoadDimDates());
         context.DimProducts.AddRange(csvProvider.LoadDimProducts());
@@ -52,7 +56,9 @@ if (useCsvData)
         
         context.SaveChanges();
 
+        Console.WriteLine();
         Console.WriteLine("Datos CSV cargados en memoria correctamente");
+        Console.WriteLine();
     }
 }
 

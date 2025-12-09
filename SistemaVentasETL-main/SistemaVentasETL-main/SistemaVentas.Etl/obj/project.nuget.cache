@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CRXHF1F30kI=",
+  "dgSpecHash": "GjM1davEK84=",
   "success": true,
-  "projectFilePath": "C:\\Users\\hidek\\Downloads\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\SistemaVentas.Etl.csproj",
+  "projectFilePath": "C:\\Users\\hidek\\OneDrive\\Desktop\\SistemaVentas_ETL-main\\SistemaVentas_ETL-main\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\SistemaVentas.Etl.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hidek\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\hidek\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
