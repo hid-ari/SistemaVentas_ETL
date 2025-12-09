@@ -5865,11 +5865,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hidek\\OneDrive\\Desktop\\SistemaVentas_ETL-main\\SistemaVentas_ETL-main\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\SistemaVentas.Etl.csproj",
+      "projectUniqueName": "C:\\Users\\hidek\\OneDrive\\Desktop\\CRUD de Usuarios\\SistemaVentas_ETL\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\SistemaVentas.Etl.csproj",
       "projectName": "SistemaVentas.Etl",
-      "projectPath": "C:\\Users\\hidek\\OneDrive\\Desktop\\SistemaVentas_ETL-main\\SistemaVentas_ETL-main\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\SistemaVentas.Etl.csproj",
+      "projectPath": "C:\\Users\\hidek\\OneDrive\\Desktop\\CRUD de Usuarios\\SistemaVentas_ETL\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\SistemaVentas.Etl.csproj",
       "packagesPath": "C:\\Users\\hidek\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hidek\\OneDrive\\Desktop\\SistemaVentas_ETL-main\\SistemaVentas_ETL-main\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\obj\\",
+      "outputPath": "C:\\Users\\hidek\\OneDrive\\Desktop\\CRUD de Usuarios\\SistemaVentas_ETL\\SistemaVentasETL-main\\SistemaVentasETL-main\\SistemaVentas.Etl\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
