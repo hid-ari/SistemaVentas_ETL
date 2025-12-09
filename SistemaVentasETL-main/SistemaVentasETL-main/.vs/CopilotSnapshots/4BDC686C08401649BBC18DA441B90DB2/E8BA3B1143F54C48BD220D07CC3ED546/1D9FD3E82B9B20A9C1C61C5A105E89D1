@@ -1,0 +1,276 @@
+﻿using SistemaVentas.Etl.Models;
+using System.Net.Http.Json;
+
+namespace SistemaVentas.Etl.Services
+{
+    public class ApiExtractor
+    {
+        private readonly HttpClient _httpClient;
+        private readonly DimensionLoader _dimensionLoader;
+
+        public ApiExtractor(HttpClient httpClient, DimensionLoader dimensionLoader)
+        {
+            _httpClient = httpClient;
+            _dimensionLoader = dimensionLoader;
+        }
+
+        public async Task<int> LoadDimensionsFromApiAsync()
+        {
+            Console.WriteLine("Conectando a API REST...");
+            
+            int totalDimensionsLoaded = 0;
+
+            try
+            {
+                totalDimensionsLoaded += await LoadDimDateFromApiAsync();
+                totalDimensionsLoaded += await LoadDimProductFromApiAsync();
+                totalDimensionsLoaded += await LoadDimCustomerFromApiAsync();
+                totalDimensionsLoaded += await LoadDimStoreFromApiAsync();
+                totalDimensionsLoaded += await LoadDimSalespersonFromApiAsync();
+
+                Console.WriteLine($"Total dimensiones API: {totalDimensionsLoaded} registros");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al conectar con la API: {ex.Message}");
+                Console.WriteLine("Verifique que la API este ejecutandose");
+            }
+
+            return totalDimensionsLoaded;
+        }
+
+        private async Task<int> LoadDimDateFromApiAsync()
+        {
+            try
+            {
+                Console.WriteLine("Cargando fechas desde API...");
+                var response = await _httpClient.GetAsync("DimDate");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error al obtener DimDate: {response.StatusCode}");
+                    return 0;
+                }
+
+                var dates = await response.Content.ReadFromJsonAsync<List<DimDate>>();
+                
+                if (dates == null || !dates.Any())
+                {
+                    Console.WriteLine("No se obtuvieron fechas desde la API");
+                    return 0;
+                }
+
+                int count = 0;
+                foreach (var date in dates)
+                {
+                    await _dimensionLoader.LoadDateAsync(date.FullDate);
+                    count++;
+                }
+
+                Console.WriteLine($"{count} fechas cargadas desde API");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar DimDate: {ex.Message}");
+                return 0;
+            }
+        }
+
+        private async Task<int> LoadDimProductFromApiAsync()
+        {
+            try
+            {
+                Console.WriteLine("Cargando productos desde API...");
+                var response = await _httpClient.GetAsync("DimProduct");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error al obtener DimProduct: {response.StatusCode}");
+                    return 0;
+                }
+
+                var products = await response.Content.ReadFromJsonAsync<List<DimProduct>>();
+                
+                if (products == null || !products.Any())
+                {
+                    Console.WriteLine("No se obtuvieron productos desde la API");
+                    return 0;
+                }
+
+                int count = 0;
+                foreach (var product in products)
+                {
+                    await _dimensionLoader.LoadProductAsync(
+                        product.ProductCode, 
+                        product.ProductName, 
+                        product.Category);
+                    count++;
+                }
+
+                Console.WriteLine($"{count} productos cargados desde API");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar DimProduct: {ex.Message}");
+                return 0;
+            }
+        }
+
+        private async Task<int> LoadDimCustomerFromApiAsync()
+        {
+            try
+            {
+                Console.WriteLine("Cargando clientes desde API...");
+                var response = await _httpClient.GetAsync("DimCustomer");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error al obtener DimCustomer: {response.StatusCode}");
+                    return 0;
+                }
+
+                var customers = await response.Content.ReadFromJsonAsync<List<DimCustomer>>();
+                
+                if (customers == null || !customers.Any())
+                {
+                    Console.WriteLine("No se obtuvieron clientes desde la API");
+                    return 0;
+                }
+
+                int count = 0;
+                foreach (var customer in customers)
+                {
+                    await _dimensionLoader.LoadCustomerAsync(
+                        customer.CustomerName, 
+                        customer.CustomerType, 
+                        customer.Country);
+                    count++;
+                }
+
+                Console.WriteLine($"{count} clientes cargados desde API");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar DimCustomer: {ex.Message}");
+                return 0;
+            }
+        }
+
+        private async Task<int> LoadDimStoreFromApiAsync()
+        {
+            try
+            {
+                Console.WriteLine("Cargando tiendas desde API...");
+                var response = await _httpClient.GetAsync("DimStore");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error al obtener DimStore: {response.StatusCode}");
+                    return 0;
+                }
+
+                var stores = await response.Content.ReadFromJsonAsync<List<DimStore>>();
+                
+                if (stores == null || !stores.Any())
+                {
+                    Console.WriteLine("No se obtuvieron tiendas desde la API");
+                    return 0;
+                }
+
+                int count = 0;
+                foreach (var store in stores)
+                {
+                    await _dimensionLoader.LoadStoreAsync(
+                        store.StoreName, 
+                        store.Country, 
+                        store.Region, 
+                        store.City);
+                    count++;
+                }
+
+                Console.WriteLine($"{count} tiendas cargadas desde API");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar DimStore: {ex.Message}");
+                return 0;
+            }
+        }
+
+        private async Task<int> LoadDimSalespersonFromApiAsync()
+        {
+            try
+            {
+                Console.WriteLine("Cargando vendedores desde API...");
+                var response = await _httpClient.GetAsync("DimSalesperson");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error al obtener DimSalesperson: {response.StatusCode}");
+                    return 0;
+                }
+
+                var salespeople = await response.Content.ReadFromJsonAsync<List<DimSalesperson>>();
+                
+                if (salespeople == null || !salespeople.Any())
+                {
+                    Console.WriteLine("No se obtuvieron vendedores desde la API");
+                    return 0;
+                }
+
+                int count = 0;
+                foreach (var salesperson in salespeople)
+                {
+                    await _dimensionLoader.LoadSalespersonAsync(salesperson.SalespersonName);
+                    count++;
+                }
+
+                Console.WriteLine($"{count} vendedores cargados desde API");
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar DimSalesperson: {ex.Message}");
+                return 0;
+            }
+        }
+
+        public async Task<int> LoadFactSalesFromApiAsync(ApiDataLoader apiLoader)
+        {
+            try
+            {
+                Console.WriteLine("Obteniendo FactSales desde API...");
+                var response = await _httpClient.GetAsync("FactSales?top=1000");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error al obtener FactSales: {response.StatusCode}");
+                    return 0;
+                }
+
+                var factSales = await response.Content.ReadFromJsonAsync<List<FactSales>>();
+                
+                if (factSales == null || !factSales.Any())
+                {
+                    Console.WriteLine("No se obtuvieron FactSales desde la API");
+                    return 0;
+                }
+
+                Console.WriteLine($"Registros obtenidos desde API: {factSales.Count}");
+                Console.WriteLine("Cargando a Data Warehouse...");
+                await apiLoader.LoadFactSalesAsync(factSales);
+                
+                return factSales.Count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar FactSales: {ex.Message}");
+                return 0;
+            }
+        }
+    }
+}

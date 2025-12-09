@@ -1,0 +1,22 @@
+﻿invoice_number,product_code,customer_name,store_name,salesperson,quantity,unit_price,total_amount,sale_date
+INV-2001,P-001,TechStore RD,Sucursal Santo Domingo Centro,Juan Carlos Pérez,2,35000.00,70000.00,2025-01-15
+INV-2002,P-004,Computadoras del Caribe,Sucursal Santiago,María González,5,28000.00,140000.00,2025-01-16
+INV-2003,P-005,Office Solutions SA,Sucursal La Romana,Pedro Rodríguez,3,45000.00,135000.00,2025-01-17
+INV-2004,P-002,Digital World,Sucursal Puerto Plata,Ana Martínez,10,850.00,8500.00,2025-01-18
+INV-2005,P-003,Mega Electrónica,Sucursal San Pedro de Macorís,Luis Fernández,8,2500.00,20000.00,2025-01-19
+INV-2006,P-006,Distribuidora Nacional,Sucursal Higüey,Carmen Sánchez,15,3200.00,48000.00,2025-01-20
+INV-2007,P-007,Corporación Tecnológica,Sucursal San Francisco,José López,20,1800.00,36000.00,2025-01-21
+INV-2008,P-008,La Casa del Computador,Sucursal Moca,Laura Díaz,6,2200.00,13200.00,2025-01-22
+INV-2009,P-009,Sistemas Integrados,Sucursal Barahona,Carlos Ramírez,4,8500.00,34000.00,2025-01-23
+INV-2010,P-010,SuperTech,Sucursal Bonao,Isabel Torres,7,18000.00,126000.00,2025-01-24
+INV-2011,P-011,TechStore RD,Sucursal Santo Domingo Centro,Juan Carlos Pérez,12,2800.00,33600.00,2025-01-25
+INV-2012,P-012,Computadoras del Caribe,Sucursal Santiago,María González,3,3500.00,10500.00,2025-01-26
+INV-2013,P-013,Office Solutions SA,Sucursal La Romana,Pedro Rodríguez,25,450.00,11250.00,2025-01-27
+INV-2014,P-014,Digital World,Sucursal Puerto Plata,Ana Martínez,15,680.00,10200.00,2025-01-28
+INV-2015,P-015,Mega Electrónica,Sucursal San Pedro de Macorís,Luis Fernández,2,12000.00,24000.00,2025-01-29
+INV-2016,P-001,Distribuidora Nacional,Sucursal Higüey,Carmen Sánchez,4,35000.00,140000.00,2025-01-30
+INV-2017,P-004,Corporación Tecnológica,Sucursal San Francisco,José López,6,28000.00,168000.00,2025-01-31
+INV-2018,P-005,La Casa del Computador,Sucursal Moca,Laura Díaz,2,45000.00,90000.00,2025-02-01
+INV-2019,P-006,Sistemas Integrados,Sucursal Barahona,Carlos Ramírez,10,3200.00,32000.00,2025-02-02
+INV-2020,P-007,SuperTech,Sucursal Bonao,Isabel Torres,18,1800.00,32400.00,2025-02-03
+
