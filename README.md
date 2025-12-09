@@ -1,5 +1,5 @@
 # SistemaVentas_ETL  
-## Documentación Unificada del Proceso ETL para Dimensiones y Tabla de Hechos
+## Documentación del Proceso ETL para Dimensiones y Tabla de Hechos
 
 ---
 
